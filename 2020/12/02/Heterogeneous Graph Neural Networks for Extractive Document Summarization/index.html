@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+
+  
+  <title>Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="title:Heterogeneous Graph Neural Networks for Extractive Document SummarizationDate:2020-11-25 14:43:12tags:note   Introduction本篇文章提出了一种用异质图来做摘要抽取的方式。 之前的用图来做summarization抽取的工作：  节点：把句子作为图中的节点    边：通">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hexo">
+<meta property="og:url" content="http://example.com/2020/12/02/Heterogeneous%20Graph%20Neural%20Networks%20for%20Extractive%20Document%20Summarization/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="title:Heterogeneous Graph Neural Networks for Extractive Document SummarizationDate:2020-11-25 14:43:12tags:note   Introduction本篇文章提出了一种用异质图来做摘要抽取的方式。 之前的用图来做summarization抽取的工作：  节点：把句子作为图中的节点    边：通">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://typora-upic-1304199839.cos.ap-shanghai.myqcloud.com/upload/image-20201202165457002.png">
+<meta property="og:image" content="https://typora-upic-1304199839.cos.ap-shanghai.myqcloud.com/upload/image-20201204184134515.png">
+<meta property="og:image" content="https://typora-upic-1304199839.cos.ap-shanghai.myqcloud.com/upload/image-20201208000050232.png">
+<meta property="og:image" content="https://typora-upic-1304199839.cos.ap-shanghai.myqcloud.com/upload/image-20201208003725217.png">
+<meta property="og:image" content="https://typora-upic-1304199839.cos.ap-shanghai.myqcloud.com/upload/image-20201208084255133.png">
+<meta property="og:image" content="https://typora-upic-1304199839.cos.ap-shanghai.myqcloud.com/upload/image-20201208090729684.png">
+<meta property="og:image" content="https://typora-upic-1304199839.cos.ap-shanghai.myqcloud.com/upload/image-20201208091014341.png">
+<meta property="og:image" content="https://typora-upic-1304199839.cos.ap-shanghai.myqcloud.com/upload/image-20201208091236239.png">
+<meta property="article:published_time" content="2020-12-02T08:54:50.074Z">
+<meta property="article:modified_time" content="2021-01-11T08:58:18.459Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://typora-upic-1304199839.cos.ap-shanghai.myqcloud.com/upload/image-20201202165457002.png">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 5.2.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-Heterogeneous Graph Neural Networks for Extractive Document Summarization" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2020/12/02/Heterogeneous%20Graph%20Neural%20Networks%20for%20Extractive%20Document%20Summarization/" class="article-date">
+  <time datetime="2020-12-02T08:54:50.074Z" itemprop="datePublished">2020-12-02</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <hr>
+<p>title:Heterogeneous Graph Neural Networks for Extractive Document Summarization<br>Date:2020-11-25 14:43:12<br>tags:note</p>
+<hr>
+<p><img src="https://typora-upic-1304199839.cos.ap-shanghai.myqcloud.com/upload/image-20201202165457002.png" alt="image-20201202165457002"></p>
+<h1 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h1><p>本篇文章提出了一种用异质图来做摘要抽取的方式。</p>
+<p>之前的用图来做summarization抽取的工作：</p>
+<ul>
+<li><p>节点：把句子作为图中的节点</p>
+</li>
+<li><p>  边：通过句子间的统计信息或者语言学上的信息来得到图的边/全连接图，这样构建出来的图是同质的。</p>
+</li>
+</ul>
+<p><strong>Motivation</strong>:加入其它不同细粒度的语义节点，以丰富句子间的关系，更好的得到句子的representation</p>
+<p>而本篇论文说的是为了简化起见，提出了只把单词节点作为语义单元，单词节点作为连接句子间的中介，提供了更加丰富的cross-sentence信息。(文章也提到可以加入entity，concept等语义单元)</p>
+<h1 id="Methodology"><a href="#Methodology" class="headerlink" title="Methodology"></a>Methodology</h1><h2 id="Model"><a href="#Model" class="headerlink" title="Model"></a>Model</h2><img src="https://typora-upic-1304199839.cos.ap-shanghai.myqcloud.com/upload/image-20201204184134515.png" alt="image-20201204184134515" style="zoom: 33%;" />
+
+<p>模型由三部分组成：</p>
+<h3 id="Graph-Initializers"><a href="#Graph-Initializers" class="headerlink" title="Graph Initializers"></a>Graph Initializers</h3><ul>
+<li>  Sentence node：对于每一个句子先用不同kernal大小的CNN提取每个句子的n-gram信息,得到句子的local feaure $l_j$</li>
+</ul>
+<p>​                               再用双向LSTM得到句子的global feature   $g_j$</p>
+<p>​                               最后得到sentence node feature  $X_{s_{j}}=\left[l_{j} ; g_{j}\right]$</p>
+<ul>
+<li>  Edge feature:  句子节点和词节点之间边的权重，由TF-IDF值确定，TF是单词在句子中出现的次数，IDF考量的是单词在文档句子中的出现次数。</li>
+</ul>
+<h3 id="Heterogeneous-Graph-Layer"><a href="#Heterogeneous-Graph-Layer" class="headerlink" title="Heterogeneous Graph Layer"></a>Heterogeneous Graph Layer</h3><ul>
+<li>  用GAT来更新图中节点的信息</li>
+</ul>
+<div>
+ $$
+z_{i j}=\text { LeakyReLU }\left(\mathbf{W}_{a}\left[\mathbf{W}_{q} \boldsymbol{h}_{i} ; \mathbf{W}_{k} \boldsymbol{h}_{j}\right]\right)
+$$
+</div>
+
+<p>$$<br>z_{i j}=\text { LeakyReLU }\left(\mathbf{W}<em>{a}\left[\mathbf{W}</em>{q} \boldsymbol{h}<em>{i} ; \mathbf{W}</em>{k} \boldsymbol{h}_{j}\right]\right)<br>$$</p>
+<p>$$<br>\alpha_{i j}=\frac{\exp \left(z_{i j}\right)}{\sum_{l \in \mathcal{N}<em>{i}} \exp \left(z</em>{i l}\right)}<br>$$</p>
+<p>$$<br>\boldsymbol{u}<em>{i}=\sigma\left(\sum</em>{j \in \mathcal{N}<em>{i}} \alpha</em>{i j} \mathbf{W}<em>{v} \boldsymbol{h}</em>{j}\right)<br>$$</p>
+<ul>
+<li>  引入了多头注意力</li>
+</ul>
+<p>$$<br>\boldsymbol{u}<em>{i}=|</em>{k=1}^{K} \sigma\left(\sum_{j \in \mathcal{N}<em>{i}} \alpha</em>{i j}^{k} \mathbf{W}^{k} \boldsymbol{h}_{i}\right)<br>$$</p>
+<ul>
+<li>  引入了residual connection</li>
+</ul>
+<p>$$<br>\boldsymbol{h}<em>{i}^{\prime}=\boldsymbol{u}</em>{i}+\boldsymbol{h}_{i}<br>$$</p>
+<ul>
+<li>  在GAT中加入了边的权重$e_{i j}$考虑了</li>
+</ul>
+<p>$$<br>z_{i j}=\text { LeakyReLU }\left(\mathbf{W}<em>{a}\left[\mathbf{W}</em>{q} \boldsymbol{h}<em>{i} ; \mathbf{W}</em>{k} \boldsymbol{h}<em>{j} ; \boldsymbol{e}</em>{i j}\right]\right)<br>$$</p>
+<p>​                               其中，$\boldsymbol{e}<em>{i j} \in\mathbb{R}^{m n \times d</em>{e}}$   ， 把原来属于标量的权重先映射到向量空间中，对边的权重做一个embedding</p>
+<ul>
+<li><p>参考了Transformer,即在节点中加入了单词顺序的postion encoding </p>
+<p>  所以在经过GAT之后，还将节点经过了一层position-wise feed-forward (FFN) layer</p>
+</li>
+</ul>
+<h4 id="Iterative-updating"><a href="#Iterative-updating" class="headerlink" title="Iterative updating"></a>Iterative updating</h4><img src="https://typora-upic-1304199839.cos.ap-shanghai.myqcloud.com/upload/image-20201208000050232.png" alt="image-20201208000050232" style="zoom: 50%;" />
+
+<p>第一次迭代时，只更新sentence节点，表示成矩形形式：<br>$$<br>\mathbf{U}<em>{s \leftarrow w}^{1}=\operatorname{GAT}\left(\mathbf{H}</em>{s}^{0}, \mathbf{H}<em>{w}^{0}, \mathbf{H}</em>{w}^{0}\right)<br>$$</p>
+<p>$$<br>\mathbf{H}<em>{s}^{1}=\mathrm{FFN}\left(\mathbf{U}</em>{s \leftarrow w}^{1}+\mathbf{H}_{s}^{0}\right)<br>$$</p>
+<p>以后的每次迭代都分为两步，先更新句子节点的表征，再更新单词节点的表征：<br>$$<br>\begin{aligned}<br>\mathbf{U}<em>{w \leftarrow s}^{t+1} &amp;=\operatorname{GAT}\left(\mathbf{H}</em>{w}^{t}, \mathbf{H}<em>{s}^{t}, \mathbf{H}</em>{s}^{t}\right) \<br>\mathbf{H}<em>{w}^{t+1} &amp;=\mathrm{FFN}\left(\mathbf{U}</em>{w \leftarrow s}^{t+1}+\mathbf{H}<em>{w}^{t}\right) \<br>\mathbf{U}</em>{s \leftarrow w}^{t+1} &amp;=\operatorname{GAT}\left(\mathbf{H}<em>{s}^{t}, \mathbf{H}</em>{w}^{t+1}, \mathbf{H}<em>{w}^{t+1}\right) \<br>\mathbf{H}</em>{s}^{t+1} &amp;=\mathrm{FFN}\left(\mathbf{U}<em>{s \leftarrow w}^{t+1}+\mathbf{H}</em>{s}^{t}\right)<br>\end{aligned}<br>$$</p>
+<h2 id="Sentence-Selector"><a href="#Sentence-Selector" class="headerlink" title="Sentence Selector"></a>Sentence Selector</h2><p>文章用的是抽取方式生成summarization，所以在对sentence 节点encode之后，对所有句子进行排序，从前到后选择组成摘要的句子，同时加入了Trigram blocking机制，如果当前句子和已经被选为组成摘要的句子trigram有重合，那么直接跳过这个句子</p>
+<h2 id="Multi-document-Summarization"><a href="#Multi-document-Summarization" class="headerlink" title="Multi-document Summarization"></a>Multi-document Summarization</h2><img src="https://typora-upic-1304199839.cos.ap-shanghai.myqcloud.com/upload/image-20201208003725217.png" alt="image-20201208003725217" style="zoom:50%;" />
+
+<p>这篇论文还将提出的框架套用到了多文档摘要的生成上，具体做法就是加入document节点，还是通过单词节点作为中介语义单元来构建文档与文档之间，文档与句子之间的关系。</p>
+<ul>
+<li>  document encoding: 对句子节点进行均值池化得到</li>
+<li>  更新：把document 节点当做特殊的句子节点</li>
+<li>  Sentence selection：把句子节点和文档节点的表征拼接起来，作为句子的表征</li>
+</ul>
+<h2 id="Experiment"><a href="#Experiment" class="headerlink" title="Experiment"></a>Experiment</h2><p>模型在CNN/DailyMail上的表现：</p>
+<img src="https://typora-upic-1304199839.cos.ap-shanghai.myqcloud.com/upload/image-20201208084255133.png" alt="image-20201208084255133" style="zoom:50%;" />
+
+<p>与建立句子之间全连接的模型Ext相比，有了提升。说明这种异质图能更有效的建立句子间的联系</p>
+<p>​                </p>
+<p>模型在NYT50的表现如上图。这上面用了Tri-Blocking效果反而比不用更差，应该是和数据集构成摘要的特点有关。</p>
+<img src="https://typora-upic-1304199839.cos.ap-shanghai.myqcloud.com/upload/image-20201208090729684.png" alt="image-20201208090729684" style="zoom:50%;" />
+
+
+
+<p>多文档摘要生成方面的表现：</p>
+<img src="https://typora-upic-1304199839.cos.ap-shanghai.myqcloud.com/upload/image-20201208091014341.png" alt="image-20201208091014341" style="zoom:50%;" />
+
+
+
+<h2 id="Ablation-studies"><a href="#Ablation-studies" class="headerlink" title="Ablation studies"></a>Ablation studies</h2><img src="https://typora-upic-1304199839.cos.ap-shanghai.myqcloud.com/upload/image-20201208091236239.png" alt="image-20201208091236239" style="zoom:50%;" />
+
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2020/12/02/Heterogeneous%20Graph%20Neural%20Networks%20for%20Extractive%20Document%20Summarization/" data-id="ckjsi4f9z0000qz10bov9ce7m" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/12/">December 2020</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2020/12/02/Heterogeneous%20Graph%20Neural%20Networks%20for%20Extractive%20Document%20Summarization/">(no title)</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2021 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+
+  
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+  </div>
+</body>
+</html>
